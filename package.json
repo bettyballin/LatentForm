@@ -1,0 +1,14 @@
+{
+  "name": "latentform-showcase",
+  "version": "1.0.0",
+  "description": "Showcase site: a from-scratch neural network trained live in the browser, GPU particle 3D and scroll-driven motion.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
