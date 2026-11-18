@@ -107,7 +107,7 @@ export class Lab {
   // ───────────────────────────── frame loop ─────────────────────────────
 
   frame(time, dt) {
-    if (!this.visible) return;
+    if (!this.visible || this.enabled === false) return;
     this.frameCount++;
     this.time = time;
 

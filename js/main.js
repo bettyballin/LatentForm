@@ -10,6 +10,8 @@ import Lenis from 'lenis';
 import { ParticleField } from './hero/ParticleField.js';
 import { SHAPES } from './hero/shapes.js';
 import { Lab } from './lab/Lab.js';
+import { LanguageLab } from './lang/LanguageLab.js';
+import { ControlLab } from './rl/ControlLab.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -305,7 +307,35 @@ const lab = new Lab($('#lab'), {
   },
 });
 
-if (new URLSearchParams(location.search).has('debug')) window.__latentform = { field, lab, lenis, gsap, ScrollTrigger };
+// Model tabs: only the selected model trains and renders. The other two are created on first visit.
+const models = { classifier: lab, language: null, control: null };
+const tabs = $$('.models__tabs [role="tab"]');
+function selectModel(key) {
+  if (key === 'language') models.language ??= new LanguageLab($('#model-language'));
+  if (key === 'control') models.control ??= new ControlLab($('#model-control'));
+  tabs.forEach((t) => {
+    const on = t.dataset.model === key;
+    t.setAttribute('aria-selected', String(on));
+    t.tabIndex = on ? 0 : -1;
+    $(`#${t.getAttribute('aria-controls')}`).hidden = !on;
+  });
+  lab.enabled = key === 'classifier';
+  models.language?.setActive(key === 'language');
+  models.control?.setActive(key === 'control');
+  ScrollTrigger.refresh(); // the lab changes height, so later sections move
+}
+tabs.forEach((t, i) => {
+  t.addEventListener('click', () => selectModel(t.dataset.model));
+  t.addEventListener('keydown', (e) => {
+    const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (!step) return;
+    const next = tabs[(i + step + tabs.length) % tabs.length];
+    next.focus();
+    selectModel(next.dataset.model);
+  });
+});
+
+if (new URLSearchParams(location.search).has('debug')) window.__latentform = { field, lab, models, selectModel, lenis, gsap, ScrollTrigger };
 
 /* ─────────────────────────── 9 · Main loop ─────────────────────────── */
 let last = 0;
@@ -319,6 +349,8 @@ gsap.ticker.add((time) => {
     field.render(time);
   }
   lab.frame(time, dt);
+  models.language?.frame(time, dt);
+  models.control?.frame(time, dt);
   cursor.update?.(dt);
   updateMarquee(dt);
 });

@@ -333,6 +333,75 @@ input[type='range']:focus-visible { outline: 2px solid var(--ice); outline-offse
 .tk-n { color: #ffb36b; }
 .tk-f { color: var(--ice); }
 
+/* Model tabs */
+.models__tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 24px; }
+.models__tabs button {
+  display: grid; gap: 4px; text-align: left; padding: 18px 20px; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  transition: border-color 0.3s, background 0.3s, transform 0.4s var(--ease-out);
+}
+.models__tabs button:hover { border-color: var(--line-2); transform: translateY(-2px); }
+.models__tabs button[aria-selected='true'] { border-color: var(--ember); background: color-mix(in srgb, var(--ember) 9%, var(--panel)); }
+.models__tabs button:focus-visible { outline: 2px solid var(--ice); outline-offset: 3px; }
+.models__kind { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.models__tabs button[aria-selected='true'] .models__kind { color: var(--ember); }
+.models__tabs strong { font-size: clamp(20px, 2vw, 28px); font-weight: 500; letter-spacing: -0.03em; }
+.models__desc { font-size: 14px; color: #a9adbb; }
+.models__panel { animation: panel-in 0.6s var(--ease-out); }
+@keyframes panel-in { from { opacity: 0; transform: translateY(16px); } }
+.lab__code--wide { margin-top: 20px; max-height: 380px; }
+
+/* Language model */
+.lm__grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.lm__main { display: grid; gap: 14px; min-width: 0; }
+.lm__console, .lm__prompt { padding: 16px 18px; display: grid; gap: 12px; }
+.lm__live { margin-left: 8px; color: var(--muted); }
+.lm__live::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; background: var(--muted); vertical-align: 1px; }
+.lm__live.is-on { color: var(--lime); }
+.lm__live.is-on::before { background: var(--lime); box-shadow: 0 0 8px var(--lime); animation: pulse 1.2s infinite; }
+.lm__sample, .lm__output {
+  font-family: var(--font-mono); font-size: clamp(13px, 1.1vw, 15px); line-height: 1.7; color: var(--text);
+  min-height: 7.2em; white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.lm__output { min-height: 5.2em; }
+.lm__muted { color: var(--muted); }
+.lm__caret { display: inline-block; width: 0.6em; height: 1.1em; margin-left: 1px; vertical-align: -0.2em; background: var(--ember); animation: pulse 0.8s steps(2) infinite; }
+.lm__form { display: flex; gap: 8px; }
+.lm__form input {
+  flex: 1; min-width: 0; padding: 10px 14px; border-radius: 999px; border: 1px solid var(--line-2);
+  background: rgba(255, 255, 255, 0.03); color: var(--text); font: 14px var(--font-mono);
+}
+.lm__form input:focus-visible { outline: 2px solid var(--ice); outline-offset: 2px; }
+.lm__form button:disabled { opacity: 0.5; }
+.lm__attn { padding: 16px 18px 6px; }
+.lm__attn-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; align-items: center; }
+.lm__attn-ctrls { display: flex; flex-wrap: wrap; gap: 8px; }
+.lm__attn-ctrls .seg button { padding: 5px 9px; font-size: 11px; }
+.lm__attn-ctrls .seg i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
+.lm__attn canvas { display: block; width: 100%; height: 190px; touch-action: pan-y; }
+.lm__arch { padding: 16px 18px; }
+.lm__arch dl { margin: 10px 0 0; display: grid; gap: 8px; }
+.lm__arch dl div { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.lm__arch dl div:last-child { border-bottom: 0; padding-bottom: 0; }
+.lm__arch dt { color: var(--muted); }
+.lm__arch dd { margin: 0; text-align: right; }
+
+/* Reinforcement learning */
+.rl__stage { aspect-ratio: 4 / 3; overflow: hidden; }
+.rl__stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: manipulation; }
+.rl__hud {
+  position: absolute; left: 14px; top: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; pointer-events: none;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+}
+#rl-status { color: var(--ember); }
+#rl-status.is-solved { color: var(--lime); }
+.rl__policy { padding: 16px 18px; display: grid; gap: 10px; }
+.rl__bar { display: grid; grid-template-columns: 84px 1fr 40px; gap: 10px; align-items: center; font-size: 13px; color: #c0c4d1; }
+.rl__bar b { position: relative; height: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.07); overflow: hidden; }
+.rl__bar b::after { content: ''; position: absolute; inset: 0; width: var(--w, 50%); border-radius: 6px; background: var(--ice); }
+.rl__bar:last-child b::after { background: var(--ember); }
+.rl__bar em { font-style: normal; font-family: var(--font-mono); text-align: right; }
+
 /* ==========================================================================
    05 · Capabilities
    ========================================================================== */
@@ -404,7 +473,8 @@ input[type='range']:focus-visible { outline: 2px solid var(--ice); outline-offse
    ========================================================================== */
 @media (max-width: 1100px) {
   .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .lab__grid, .lab__bottom { grid-template-columns: minmax(0, 1fr); }
+  .lab__grid, .lab__bottom, .lm__grid { grid-template-columns: minmax(0, 1fr); }
+  .rl__stage { max-width: 760px; width: 100%; justify-self: center; }
   .lab__plane { max-width: 640px; width: 100%; justify-self: center; }
   .lab__net { height: 300px; }
 }
@@ -434,6 +504,11 @@ input[type='range']:focus-visible { outline: 2px solid var(--ice); outline-offse
   .ro-row { grid-template-columns: 8px 12px 1fr 30px; }
   .lab__legend { top: auto; bottom: 12px; }
   .lab__hint { display: none; }
+  .models__tabs { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .models__tabs button { padding: 12px 16px; }
+  .models__desc { display: none; }
+  .rl__stage { aspect-ratio: 5 / 4; }
+  .lm__attn canvas { height: 160px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

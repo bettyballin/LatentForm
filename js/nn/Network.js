@@ -125,13 +125,16 @@ export class Network {
    *
    * Softmax + cross-entropy gives the famously clean output error:  δ_L = p − y
    * Then, layer by layer:   ∂L/∂W = δ · aᵀ,   δ_prev = (Wᵀ δ) ⊙ f'(z)
+   *
+   * `weight` scales the sample's loss. Reinforcement learning uses it: weighting
+   * −log π(action) by the advantage turns this into the policy gradient.
    */
-  backward(label) {
+  backward(label, weight = 1) {
     const { sizes, L, W, gW, gb, a, z, delta, act } = this;
 
     // Output layer: gradient of cross-entropy w.r.t. the softmax logits.
     const p = a[L], dOut = delta[L];
-    for (let k = 0; k < sizes[L]; k++) dOut[k] = p[k] - (k === label ? 1 : 0);
+    for (let k = 0; k < sizes[L]; k++) dOut[k] = (p[k] - (k === label ? 1 : 0)) * weight;
 
     for (let l = L - 1; l >= 0; l--) {
       const nIn = sizes[l], nOut = sizes[l + 1];

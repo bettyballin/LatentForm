@@ -54,7 +54,7 @@
     <a href="#hero" class="nav__brand" data-magnetic>LATENT<span>FORM</span></a>
     <nav class="nav__links" aria-label="Sections">
       <a href="#process">Process</a>
-      <a href="#lab">Model</a>
+      <a href="#lab">Models</a>
       <a href="#capabilities">Capabilities</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -88,7 +88,7 @@
         <p class="eyebrow">02 — Manifesto</p>
         <p class="manifesto__text" data-scrub-words>
           Most products rent their intelligence. I write mine, from the first matrix multiply to the last pixel on screen.
-          The network further down this page has no TensorFlow and no PyTorch behind it: just hand-written math, learning live in your browser.
+          The networks further down this page have no TensorFlow and no PyTorch behind them: just hand-written math, learning live in your browser.
         </p>
       </div>
     </section>
@@ -141,15 +141,34 @@
       </div>
     </section>
 
-    <!-- 04 · Lab: the from-scratch neural network -->
-    <section id="lab" class="lab" data-section="04" data-title="The Model">
+    <!-- 04 · Lab: three neural networks written from scratch -->
+    <section id="lab" class="lab" data-section="04" data-title="The Models">
       <div class="container">
         <header class="section-head">
-          <p class="eyebrow">04 — The Model</p>
-          <h2 data-reveal>A neural network, written <em>from scratch.</em> Train it live.</h2>
-          <p class="lede">No ML libraries. The forward pass, backpropagation and the Adam optimiser are hand-written in JavaScript and running in your browser right now. Pick a dataset, reshape the network, click to add points, and watch it learn.</p>
+          <p class="eyebrow">04 — The Models</p>
+          <h2 data-reveal>Three neural networks, written <em>from scratch.</em> Train them live.</h2>
+          <p class="lede">No ML libraries. Each model has its forward pass, backpropagation and optimiser hand-written in JavaScript, and trains in your browser right now: one learns to classify, one learns to write, one learns to balance.</p>
         </header>
 
+        <div class="models__tabs" role="tablist" aria-label="Models">
+          <button type="button" role="tab" id="tab-classifier" aria-controls="model-classifier" aria-selected="true" data-model="classifier">
+            <span class="models__kind">Supervised learning</span>
+            <strong>Classifier</strong>
+            <span class="models__desc">Multi-layer perceptron drawing decision boundaries</span>
+          </button>
+          <button type="button" role="tab" id="tab-language" aria-controls="model-language" aria-selected="false" tabindex="-1" data-model="language">
+            <span class="models__kind">Natural language</span>
+            <strong>Tiny GPT</strong>
+            <span class="models__desc">Transformer with self-attention that learns to write</span>
+          </button>
+          <button type="button" role="tab" id="tab-control" aria-controls="model-control" aria-selected="false" tabindex="-1" data-model="control">
+            <span class="models__kind">Reinforcement learning</span>
+            <strong>Balancer</strong>
+            <span class="models__desc">Policy network that learns by trial and error</span>
+          </button>
+        </div>
+
+        <div class="models__panel" id="model-classifier" role="tabpanel" aria-labelledby="tab-classifier">
         <div class="lab__grid">
           <div class="lab__plane panel" data-cursor="Add point">
             <canvas id="lab-plane" aria-label="Decision boundary of the network. Click to add a training point."></canvas>
@@ -220,6 +239,107 @@
             <pre><code id="lab-code"></code></pre>
           </div>
         </div>
+        </div>
+
+        <!-- Model 2 · Tiny GPT -->
+        <div class="models__panel" id="model-language" role="tabpanel" aria-labelledby="tab-language" hidden>
+          <div class="lm__grid">
+            <div class="lm__main">
+              <div class="panel lm__console">
+                <div class="panel__label">Live sample · step <span id="lm-sample-step">0</span> <span class="lm__live" id="lm-live">training</span></div>
+                <p class="lm__sample" id="lm-sample" aria-live="off"></p>
+              </div>
+              <div class="panel lm__prompt">
+                <div class="panel__label">Write with it</div>
+                <form id="lm-form" class="lm__form">
+                  <input id="lm-prompt" type="text" maxlength="60" value="a model is" autocomplete="off" spellcheck="false" aria-label="Prompt for the model" />
+                  <button class="btn btn--accent btn--small" type="submit">Generate</button>
+                </form>
+                <div class="ctrl">
+                  <label class="ctrl__label" for="lm-temp">Temperature (higher = more adventurous) <output id="lm-temp-out">0.80</output></label>
+                  <input type="range" id="lm-temp" min="10" max="150" step="1" value="80" />
+                </div>
+                <p class="lm__output" id="lm-output"></p>
+              </div>
+              <div class="panel lm__attn" data-cursor="Inspect">
+                <div class="lm__attn-head">
+                  <div class="panel__label">Attention · what each character looks back at</div>
+                  <div class="lm__attn-ctrls">
+                    <div class="seg" id="lm-layer" role="group" aria-label="Transformer block"></div>
+                    <div class="seg" id="lm-head" role="group" aria-label="Attention head"></div>
+                  </div>
+                </div>
+                <canvas id="lm-attn" aria-label="Attention arcs between characters. Hover a character to see what it attends to."></canvas>
+              </div>
+            </div>
+            <div class="lab__side">
+              <div class="lab__stats">
+                <div><span>Step</span><strong id="lm-step">0</strong></div>
+                <div><span>Loss</span><strong id="lm-loss">—</strong></div>
+                <div><span>Tokens / s</span><strong id="lm-tps">—</strong></div>
+                <div><span>Params</span><strong id="lm-params">—</strong></div>
+              </div>
+              <div class="panel lm__arch">
+                <div class="panel__label">Architecture</div>
+                <dl id="lm-arch"></dl>
+              </div>
+              <div class="panel lab__chart">
+                <div class="panel__label">Training curve · <span class="k-loss">loss</span></div>
+                <canvas id="lm-chart" aria-hidden="true"></canvas>
+              </div>
+              <div class="ctrl--actions">
+                <button type="button" id="lm-play" class="btn btn--accent btn--small" aria-pressed="true">Pause</button>
+                <button type="button" id="lm-reset" class="btn btn--small">Reset weights</button>
+              </div>
+            </div>
+          </div>
+          <div class="panel lab__code lab__code--wide" data-lenis-prevent>
+            <div class="panel__label">The actual attention <code>backward()</code>, derived by hand</div>
+            <pre><code id="lm-code"></code></pre>
+          </div>
+        </div>
+
+        <!-- Model 3 · Reinforcement learning -->
+        <div class="models__panel" id="model-control" role="tabpanel" aria-labelledby="tab-control" hidden>
+          <div class="lab__grid">
+            <div class="panel rl__stage" data-cursor="Push">
+              <canvas id="rl-canvas" aria-label="A cart balancing a pole. Click beside the cart to push it."></canvas>
+              <div class="rl__hud"><span id="rl-status">Untrained policy</span><span id="rl-run">Balancing 0.0 s</span></div>
+              <div class="lab__hint">Click beside the cart to push it</div>
+            </div>
+            <div class="lab__side">
+              <div class="lab__stats">
+                <div><span>Episodes</span><strong id="rl-episodes">0</strong></div>
+                <div><span>Last run</span><strong id="rl-last">—</strong></div>
+                <div><span>Best</span><strong id="rl-best">—</strong></div>
+                <div><span>Avg (20)</span><strong id="rl-avg">—</strong></div>
+              </div>
+              <div class="panel rl__policy">
+                <div class="panel__label">Policy right now · π(action | state)</div>
+                <div class="rl__bar"><span>Push left</span><b id="rl-left"></b><em id="rl-pl">0.50</em></div>
+                <div class="rl__bar"><span>Push right</span><b id="rl-right"></b><em id="rl-pr">0.50</em></div>
+              </div>
+              <div class="panel lab__chart">
+                <div class="panel__label">Steps balanced per episode · goal 475 of 500</div>
+                <canvas id="rl-chart" aria-hidden="true"></canvas>
+              </div>
+              <div class="lab__controls panel">
+                <div class="ctrl">
+                  <span class="ctrl__label">Training speed</span>
+                  <div class="seg" id="rl-speed" role="group" aria-label="Training speed"></div>
+                </div>
+                <div class="ctrl ctrl--actions">
+                  <button type="button" id="rl-play" class="btn btn--accent btn--small" aria-pressed="true">Pause</button>
+                  <button type="button" id="rl-reset" class="btn btn--small">New agent</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel lab__code lab__code--wide" data-lenis-prevent>
+            <div class="panel__label">The actual REINFORCE <code>update()</code>: learning from its own trial and error</div>
+            <pre><code id="rl-code"></code></pre>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -276,10 +396,10 @@
         </div>
       </div>
       <div class="stats container">
-        <div class="stat"><strong data-count="0">0</strong><span>ML libraries in the live model</span></div>
+        <div class="stat"><strong data-count="0">0</strong><span>ML libraries behind the three live models</span></div>
         <div class="stat"><strong data-count="30000" data-format="k" id="stat-particles">30k</strong><span>particles simulated on the GPU, behind this text</span></div>
         <div class="stat"><strong id="stat-live-params">—</strong><span>trainable parameters in the lab network, right now</span></div>
-        <div class="stat"><strong data-count="6">6</strong><span>3D shapes, morphing as you scroll</span></div>
+        <div class="stat"><strong data-count="3">3</strong><span>fields of machine learning, trained live in your browser</span></div>
       </div>
     </section>
 

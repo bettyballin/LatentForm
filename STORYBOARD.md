@@ -122,6 +122,13 @@ plays it in reverse.
 
 ## 04 · The Lab — a live neural network written from scratch ★ centrepiece
 
+> **Update:** the lab is now three tabs, one per field of ML, all written from scratch:
+> **Classifier** (supervised learning, described below), **Tiny GPT** (natural language: a character-level transformer
+> that learns to write in a Web Worker, completes prompts and shows attention arcs between characters) and **Balancer**
+> (reinforcement learning: REINFORCE learns to balance a pole on a cart, and visitors can push the cart).
+> Each tab shows the real source code of its hardest function. Demo script addition: open **Tiny GPT** and let it
+> babble for ten seconds, type a prompt, then open **Balancer** and push the cart once it's solved.
+
 ```
 ┌───────────────────────────────────────────────────────────────────┐
 │ 04 — The Model                                                    │
