@@ -50,7 +50,7 @@ Three.js 0.160, GSAP 3.12.5 and Lenis 1.1.13 load from jsDelivr at pinned versio
 ## Make it yours
 
 - **Name and copy:** "Latentform", the headlines and the section text are plain HTML in `index.html`.
-- **Contact:** replace `hello@example.com` in `index.html` (it appears twice).
+- **Contact:** replace `betty.ballin@yahoo.de` in `index.html` (it appears twice).
 - **Colours and fonts:** the variables at the top of `css/style.css`. The particle colours are `uColorA/B/C` in
   `js/hero/ParticleField.js`, and the lab class colours are `CLASS_HEX` in `js/lab/Network3D.js`.
 - **3D story:** `LOOKS` in `js/main.js` maps each section to a shape, brightness, x-offset and scale.
